@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "this is my about page!"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Final",
+    "section": "",
+    "text": "This is my final project!\n\n1 + 1\n\n[1] 2"
+  }
+]
