@@ -2,9 +2,7 @@
 title: "Final"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+This is my final project!
 
 ```{r}
 1 + 1
