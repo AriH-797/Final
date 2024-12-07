@@ -11,6 +11,20 @@
     "href": "index.html",
     "title": "Final",
     "section": "",
-    "text": "This is my final project!\n\n1 + 1\n\n[1] 2"
+    "text": "Dietary fiber is a crucial component of a healthy diet, with adequate intake associated with numerous health benefits. However, despite these well-established advantages, national surveys show that approximately 95% of the U.S. population fails to meet the recommended daily fiber intake, which presents significant public health challenges. In this project, we examine fiber intake across various demographics—such as age, gender, and race—using data from the National Health and Nutrition Examination Survey (NHANES). Conducted annually by the National Center for Health Statistics (NCHS), NHANES monitors the health and nutritional status of individuals across the United States. With the primary focus being adults and teenagers aged 13 and older, we analyzed the NHANES pre-pandemic dataset (2017–March 2020) to assess fiber intake trends within the U.S. population.\nClick here for the full analysis"
+  },
+  {
+    "objectID": "index.html#project-description",
+    "href": "index.html#project-description",
+    "title": "Final",
+    "section": "",
+    "text": "Dietary fiber is a crucial component of a healthy diet, with adequate intake associated with numerous health benefits. However, despite these well-established advantages, national surveys show that approximately 95% of the U.S. population fails to meet the recommended daily fiber intake, which presents significant public health challenges. In this project, we examine fiber intake across various demographics—such as age, gender, and race—using data from the National Health and Nutrition Examination Survey (NHANES). Conducted annually by the National Center for Health Statistics (NCHS), NHANES monitors the health and nutritional status of individuals across the United States. With the primary focus being adults and teenagers aged 13 and older, we analyzed the NHANES pre-pandemic dataset (2017–March 2020) to assess fiber intake trends within the U.S. population.\nClick here for the full analysis"
+  },
+  {
+    "objectID": "index.html#results",
+    "href": "index.html#results",
+    "title": "Final",
+    "section": "Results",
+    "text": "Results\n\n\n\n\nFigure 1: To better understand fiber intake trends, the data was categorized into three groups: Under 13, 13-49, and 50+. We then analyzed gender differences in fiber intake across these groups. While the gender gap is smallest for children, it is evident in all age groups, with males consistently consuming more fiber than females.\n\n\n\n\n\n\nFigure 2: This figure provides insight into the differences in average fiber consumption across ethnic groups in the United States. Non-Hispanic Asians exhibit the highest fiber consumption rates, while Non-Hispanic Blacks have the lowest overall fiber intake.\n\n\n\n\n\n\nFigure 3: A deeper analysis of ethnic differences, incorporating gender, reveals consistent trends across all ethnic groups. In every group, females tend to consume less fiber than males. Notably, Non-Hispanic Asians and Mexican Americans not only exhibit the highest overall fiber intake, but also show the largest gender disparities in fiber consumption within their respective groups."
   }
 ]

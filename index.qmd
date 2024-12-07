@@ -1,9 +1,164 @@
 ---
 title: "Final"
 ---
+## Project Description
 
-This is my final project!
+Dietary fiber is a crucial component of a healthy diet, with adequate intake associated with numerous health benefits. However, despite these well-established advantages, national surveys show that approximately 95% of the U.S. population fails to meet the recommended daily fiber intake, which presents significant public health challenges. In this project, we examine fiber intake across various demographics—such as age, gender, and race—using data from the National Health and Nutrition Examination Survey (NHANES). Conducted annually by the National Center for Health Statistics (NCHS), NHANES monitors the health and nutritional status of individuals across the United States. With the primary focus being adults and teenagers aged 13 and older, we analyzed the NHANES pre-pandemic dataset (2017–March 2020) to assess fiber intake trends within the U.S. population.
 
-```{r}
-1 + 1
+
+[Click here for the full analysis](https://github.com/AriH-797/Final/blob/main/Final.pdf)
+
+
+## Results
+
+
+```{r, include= FALSE}
+library(dplyr)
+library(ggplot2)
+library(haven)
+library(tidyverse)
+library(viridis)
+library(plotly)
+##reading in the data
+data <- read_xpt("P_DR1TOT.XPT")
+nrow(data)
+demo<- read_xpt("P_DEMO.XPT")
+nrow(demo)
+mdata<-left_join(data, demo, by= 'SEQN')
+nrow(mdata)
+
+mdata <- mdata[, c('SEQN', 'DR1TFIBE', 'DRQSDT6', 'DR1_300', 'RIDAGEYR', 'RIDAGEMN', 'RIDRETH3', 'RIAGENDR', 'DR1TKCAL')]
+
+summary(mdata)#Check the size of the data, Examine the variables and their types
+mdata<-mdata[!is.na(mdata$DR1TFIBE), ] #exclude missing fiber data
+mdata$RIAGENDR <- as.factor(mdata$RIAGENDR)
+nrow(mdata)
+head(mdata)
+tail(mdata)
+
+mdata<-mdata %>%
+  mutate(Age_range= if_else(RIDAGEYR < 13, factor(1), if_else(
+    RIDAGEYR>=13 & RIDAGEYR<50,factor(2), factor(3))))##1 for children, 2 for adult, 3 senior
+summary(mdata$Age_range)
+mdata <- mdata%>%
+   mutate(RIAGENDR = factor(RIAGENDR, 
+                            levels = c(1, 2), 
+                            labels = c("Male", "Female")))
+mdata <- mdata%>%
+    mutate(RIDRETH3 = factor(RIDRETH3,
+                            levels = c(1,2,3,4,6,7),
+                            labels = c("Mexican American","Other Hispanic","Non-Hispanic White",
+                                       "Non-Hispanic Black","Non-Hispanic Asian", "Other Race - Including Multi-Racial")))
 ```
+
+
+
+
+```{r, warning= FALSE, echo =FALSE, fig.cap="Figure 1: To better understand fiber intake trends, the data was categorized into three groups: Under 13, 13-49, and 50+. We then analyzed gender differences in fiber intake across these groups. While the gender gap is smallest for children, it is evident in all age groups, with males consistently consuming more fiber than females."}
+
+avg_fiber_data <- mdata %>%
+  group_by(Age_range, RIAGENDR) %>%
+  summarise(avg_fiber = median(DR1TFIBE, na.rm = TRUE), .groups = "drop")
+
+
+p_avg <- ggplot(data = avg_fiber_data) +
+  geom_bar(mapping = aes(x = Age_range, y = avg_fiber, fill = RIAGENDR,
+                         text = paste(
+                                  "Average Fiber Intake: ", round(avg_fiber , 2), "g<br>",
+                                  "Gender: ", RIAGENDR
+                                )), 
+           stat = "identity", position = "dodge", width = 0.7) + 
+  scale_fill_manual(values = c("Male" = "palegreen3", "Female" = "tomato")) +
+  labs(
+    x = "Age Range",
+    y = "Average Fiber Intake (grams)",
+    fill = "Gender",
+    title = "Average Fiber Intake by Gender and Age Range"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  scale_x_discrete(labels = c("1" = "Under 13", "2" = "13-49", "3" = "50 and Over"))
+
+interactive_avg_plot <- ggplotly(p_avg,tooltip = "text" )
+
+interactive_avg_plot
+
+
+```
+
+```{r, echo = FALSE, fig.cap="Figure 2: This figure provides insight into the differences in average fiber consumption across ethnic groups in the United States. Non-Hispanic Asians exhibit the highest fiber consumption rates, while Non-Hispanic Blacks have the lowest overall fiber intake."}
+
+summary_data <- mdata %>%
+  group_by(RIDRETH3) %>%
+  summarize(
+    median_fiber = median(DR1TFIBE, na.rm = TRUE),
+    count = n(),
+    sd_fiber = sd(DR1TFIBE, na.rm = TRUE)
+  ) %>%
+  mutate(
+    RIDRETH3 = as.factor(RIDRETH3), 
+    RIDRETH3_ordered = reorder(RIDRETH3, median_fiber)  
+  )
+
+g2 <- ggplot(summary_data, aes(
+  x = RIDRETH3_ordered, 
+  y = median_fiber, 
+  fill = RIDRETH3,
+  text = paste(
+    "Ethnicity: ", RIDRETH3, "<br>",
+    "Median Fiber Intake: ", round(median_fiber, 2), "g<br>",
+    "Count: ", count, "<br>",
+    "SD: ", round(sd_fiber, 2)
+  )
+)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_manual(values = c(
+    "Mexican American" = "lightblue",
+    "Other Hispanic" = "salmon",
+    "Non-Hispanic White" = "peachpuff",
+    "Non-Hispanic Black" = "palegreen",
+    "Non-Hispanic Asian" = "plum",
+    "Other Race - Including Multi-Racial" = "lavenderblush"
+  )) +
+  labs(
+    title = "Median Fiber Intake by Ethnicity",
+    x = "Ethnicity",
+    y = "Median Fiber Intake (grams)",
+    fill = "Ethnicity"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5),
+        legend.position = "none")  
+
+
+g2_plotly <- ggplotly(g2, tooltip = "text")
+
+
+g2_plotly
+```
+
+
+
+```{r, echo = FALSE, fig.cap="Figure 3: A deeper analysis of ethnic differences, incorporating gender, reveals consistent trends across all ethnic groups. In every group, females tend to consume less fiber than males. Notably, Non-Hispanic Asians and Mexican Americans not only exhibit the highest overall fiber intake, but also show the largest gender disparities in fiber consumption within their respective groups."}
+
+p <- ggplot(data = mdata) + 
+  geom_boxplot(mapping = aes(x = RIAGENDR, y = DR1TFIBE, fill = RIAGENDR)) +
+  facet_wrap(~RIDRETH3) +
+  scale_fill_manual(
+    values = c("Male" = "skyblue", "Female" = "pink"), 
+    labels = c("Male", "Female")
+  ) +
+  theme_minimal() +
+  labs(title = "Fiber Intake Across Different Ethnic Groups and Genders in the United States",
+       x = "Gender",
+       y = "Fiber Intake (grams)",
+       fill = "Gender") 
+
+
+interactive_plot <- ggplotly(p)
+
+
+interactive_plot
+```
+
